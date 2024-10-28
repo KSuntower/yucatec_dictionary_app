@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:simple_yucatec_dictionary/helpers/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:simple_yucatec_dictionary/screens/word_screen.dart';
@@ -41,31 +40,12 @@ class _HomeScreenState extends State<HomeScreen>
   final bool _languageSwitch = true;
 
   late AnimationController _controller;
-  late Animation<Alignment> _topAlignmentAnimation;
-  late Animation<Alignment> _bottomAlignmentAnimation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this,
         duration: const Duration(seconds: 10));
-
-    _topAlignmentAnimation = TweenSequence<Alignment>(
-        List.generate(4, (i) => TweenSequenceItem<Alignment>(
-          tween: Tween<Alignment>(begin: gradientAnimationPath[i],
-              end: gradientAnimationPath[(i + 1) % 4]),
-          weight: pathTime[i],
-        ))
-    ).animate(_controller);
-
-    _bottomAlignmentAnimation = TweenSequence<Alignment>(
-        List.generate(4, (i) => TweenSequenceItem<Alignment>(
-          tween: Tween<Alignment>(
-              begin: gradientAnimationPath[(i + 2) % 4],
-              end: gradientAnimationPath[(i + 3) % 4]),
-          weight: pathTime[i],
-        ))
-    ).animate(_controller);
 
     _controller.repeat();
   }
@@ -91,6 +71,15 @@ class _HomeScreenState extends State<HomeScreen>
       results = res;
     });
   }
+  void switchLanguage() {
+    if (!_languageSwitch) {
+      return;
+    }
+    setState(() {
+      modeIndex = 1 -modeIndex;
+      _first = !_first;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,16 +92,7 @@ class _HomeScreenState extends State<HomeScreen>
       body: Column(
         children: [
           GestureDetector(
-            onTap: (){
-              if (!_languageSwitch) {
-                return;
-              }
-              debugPrint("pressed");
-              setState(() {
-                modeIndex = 1 -modeIndex;
-                _first = !_first;
-              });
-            },
+            onTap: null,
             child: languageSwitchWidget(),
           ),
           Padding(
@@ -159,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen>
               // inputFormatters: [UpperCaseTextFormatter()],
               decoration: InputDecoration(
                 hintStyle: TextStyle(
-                  color: _textFocus? const Color(0xff282F5E) : Colors.grey,
+                  color: _textFocus? Colors.white : Colors.grey.shade800,
                 ),
                 hintText: "...",
                 border: InputBorder.none,
@@ -195,14 +175,6 @@ class _HomeScreenState extends State<HomeScreen>
                     width: 2.0
                 ),
                 borderRadius: BorderRadius.circular(10.0),
-                gradient: LinearGradient(
-                  colors: const [
-                    Color(0xff000000),
-                    Color(0xff282F5E),
-                  ],
-                  begin: _topAlignmentAnimation.value,
-                  end: _bottomAlignmentAnimation.value,
-                ),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -211,18 +183,18 @@ class _HomeScreenState extends State<HomeScreen>
                   // mainAxisAlignment: MainAxisAlignment.center,
                   // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Español", style: TextStyle(fontSize: 30.0, color: Colors.white),),
+                    const Text("ESP", style: TextStyle(fontSize: 30.0, color: Colors.white),),
                     Padding(
                         padding: const EdgeInsets.only(right: 10.0, left: 10.0),
                         child: AnimatedCrossFade(
-                            firstChild: const Icon(Icons.arrow_back_ios_rounded,
+                            firstChild: const Icon(Icons.arrow_back,
                               size: 30.0, color: Colors.white,),
-                            secondChild: const Icon(Icons.arrow_forward_ios_rounded,
+                            secondChild: const Icon(Icons.arrow_forward,
                               size: 30.0, color: Colors.white,),
                             crossFadeState: _first ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                             duration: Duration(milliseconds: animationSpeed))
                     ),
-                    const Text("Maya", style: TextStyle(fontSize: 30.0, color: Colors.white),),
+                    const Text("YUC", style: TextStyle(fontSize: 30.0, color: Colors.white),),
                   ],
                 ),
               ),

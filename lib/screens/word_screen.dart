@@ -4,6 +4,7 @@ import 'package:simple_yucatec_dictionary/helpers/entry_class.dart';
 class EntryScreen extends StatelessWidget {
   const EntryScreen({super.key, required this.entry});
   final Entry entry;
+
   @override
   Widget build(BuildContext context) {
     final iconCategoryList = [
@@ -40,6 +41,9 @@ class EntryScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
