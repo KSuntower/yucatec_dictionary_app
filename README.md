@@ -1,0 +1,1 @@
+# yucatec_dictionary_app
